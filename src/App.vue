@@ -1,30 +1,79 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+  <template v-if="loaded">
+    <TopBar :logo="logo" />
+
+    <div id="mid-wrapper" :class="{'has-sidebar': sidebarVisible}">
+      <SideBar v-if="sidebarVisible" :me="me" />
+      <router-view/>
+    </div>
+  </template>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import Cookies from 'js-cookie';
+import TopBar from '@/components/TopBar.vue';
+import SideBar from '@/components/SideBar.vue';
+import api from './utils/api';
+import default_logo from '@/assets/default_logo.svg';
 
-#nav {
-  padding: 30px;
+export default {
+  components: {
+    TopBar,
+    SideBar
+  },
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+  data: () => ({
+    me: null,
+    imageMeta: null,
+    loaded: false
+  }),
 
-    &.router-link-exact-active {
-      color: #42b983;
+  mounted() {
+    if(Cookies.get("Authorization") != undefined) {
+      api.get("/users/me").then(res => {
+        this.me = res.data;
+        this.loaded = true;
+      });
+    }
+    else
+      this.loaded = true;
+  },
+
+  computed: {
+    sidebarVisible() {
+      return this.$route.path != '/login' && this.$route.path != '/register';
+    },
+
+    logo() {
+      return process.env.VUE_APP_LOGO_SRC || default_logo;
     }
   }
+}
+</script>
+
+<style lang="scss">
+@import "stylesheets/dimensions.scss";
+
+html, body {
+  margin: 0;
+  font-family: "Noto Sans CJK KR", Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f6f7f9;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+#app {
+  color: #2c3e50;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding-top: $top-bar-height;
+}
+
+#mid-wrapper.has-sidebar {
+  padding-left: $side-bar-width;
 }
 </style>

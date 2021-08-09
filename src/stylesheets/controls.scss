@@ -1,0 +1,70 @@
+@import "../stylesheets/colors.scss";
+
+@mixin default-controls {
+
+    input, button, a.blue-btn, a.gray-btn, .textfield, .field {
+        display: block;
+        box-sizing: border-box;
+        height: 36px;
+        border-radius: 18px;
+        margin: 12px 0;
+        padding: 0 12px;
+        outline: none;
+
+        &:disabled {
+            cursor: unset;
+            background: #d4d4d4;
+            color: #f5f5f5;
+        }
+
+        &[contenteditable=true] {
+            height: auto;
+            min-height: 36px;
+            line-height: 20px;
+            padding: 7px 12px;
+        }
+
+        &::placeholder, &[contenteditable=true]::before {
+            color: $text-light-grey;
+        }
+    }
+
+    input, .textfield, .field {
+        border: 1px solid $line-grey;
+        font-size: 14px;
+        font-weight: normal;
+        font-family: inherit;
+    }
+
+    button, a.blue-btn, a.gray-btn {
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: normal;
+    }
+
+    a.blue-btn, a.gray-btn {
+        line-height: 36px;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .blue-btn {
+        background-color: $theme-blue;
+        color: white;
+
+        &:hover:not(:disabled) {
+            background-color: $theme-blue-emp;
+        }
+    }
+
+    .gray-btn {
+        background-color: #f0f0f0;
+        color: black;
+
+        &:hover:not(:disabled) {
+            background-color: #ebebeb;
+        }
+    }
+    
+}

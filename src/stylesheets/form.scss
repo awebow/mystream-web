@@ -1,0 +1,28 @@
+$field-gap: 12px;
+$form-padding-x: 24px;
+
+@import "./controls.scss";
+
+.mystream-form {
+    box-sizing: border-box;
+    width: 400px;
+    min-height: 0;
+    margin: 36px auto auto auto;
+    padding: 12px 24px;
+
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 2px 4px 6px #00000017;
+
+    @include default-controls;
+
+    h1 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    input, button, a.blue-btn, a.gray-btn {
+        width: 100%;
+    }
+
+}
