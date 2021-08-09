@@ -129,6 +129,8 @@ export default {
   mounted() {
     api.get(`/videos/${this.$route.params.id}`).then(res => {
       var video = res.data;
+      document.title = `${video.title} - ${process.env.VUE_APP_TITLE}`;
+
       api.get(`/channels/${video.channel_id}`).then(res => {
         delete video.channel_id;
         video.channel = res.data;

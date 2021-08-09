@@ -41,6 +41,7 @@ export default {
   mounted() {
     api.get(`/channels/${this.$route.params.id}`).then(res => {
       this.channel = res.data;
+      document.title = `${this.channel.name} - ${process.env.VUE_APP_TITLE}`;
 
       if(this.$root.me) {
         api.get(`/channels/${this.$route.params.id}/permissions`).then(res => {

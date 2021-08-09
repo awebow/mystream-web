@@ -13,19 +13,12 @@ import MyChannels from '../views/MyChannels.vue';
 import Subscriptions from '../views/Subscriptions.vue';
 import Cookies from 'js-cookie';
 
+// TODO: 파라미터 변경 시 데이터 갱신
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Videos
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
     path: '/login',
@@ -82,6 +75,8 @@ const router = createRouter({
 });
 
 router.beforeEach(function(to, from, next) {
+  document.title = process.env.VUE_APP_TITLE;
+
   var authRequired = ["EditProfile"];
   if(authRequired.indexOf(to.name) != -1 && Cookies.get("Authorization") == undefined)
     next("/login");

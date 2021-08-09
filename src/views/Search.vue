@@ -45,6 +45,8 @@ export default {
 
   methods: {
     async search() {
+      document.title = `${this.$route.query} - ${process.env.VUE_APP_TITLE}`;
+
       let channelLimit = this.$route.query.type == 'channel' ? 20 : 2;
       let res = await api.get('/channels?' + new URLSearchParams({
         query: this.$route.params.query,
