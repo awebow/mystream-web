@@ -161,11 +161,11 @@ export default {
         label: this.qualityName(e),
         selected: this.quality == i,
         onClick: () => this.setQuality(i)
-      })));
+      })).reverse());
     },
 
     speedItems() {
-      return [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].map(e => ({
+      return [2, 1.75, 1.5, 1.25, 1, 0.75, 0.5, 0.25].map(e => ({
         label: `${e}배속`,
         selected: this.speed == e,
         onClick: () => this.speed = e
