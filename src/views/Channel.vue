@@ -39,26 +39,7 @@ export default {
   components: { VideoList },
 
   mounted() {
-    api.get(`/channels/${this.$route.params.id}`).then(res => {
-      this.channel = res.data;
-      document.title = `${this.channel.name} - ${process.env.VUE_APP_TITLE}`;
-
-      if(this.$root.me) {
-        api.get(`/channels/${this.$route.params.id}/permissions`).then(res => {
-          this.ownership = res.data.ownership;
-
-          api.get(`/channels/${this.$route.params.id}/subscriptions`)
-            .then(res => this.subscription = res.data);
-        });
-      }
-
-      this.fetchVideos().then(() => {
-        if(this.pagination) {
-          this.scrollHandler = scrolls.nearBottom(this.fetchVideos);
-          this.scrollHandler.enable();
-        }
-      });
-    });
+    this.loadData();
   },
 
   unmounted() {
@@ -75,6 +56,39 @@ export default {
     unsubscribe() {
       api.delete(`/channels/${this.$route.params.id}/subscriptions`)
         .then(res => this.subscription = res.data);
+    },
+
+    loadData() {
+      if(this.scrollHandler) {
+        this.scrollHandler.disable();
+        this.scrollHandler = null;
+      }
+
+      this.pagination = '';
+      this.videos = [];
+      this.ownership = false;
+      this.subscription = null;
+
+      api.get(`/channels/${this.$route.params.id}`).then(res => {
+        this.channel = res.data;
+        document.title = `${this.channel.name} - ${process.env.VUE_APP_TITLE}`;
+
+        if(this.$root.me) {
+          api.get(`/channels/${this.$route.params.id}/permissions`).then(res => {
+            this.ownership = res.data.ownership;
+
+            api.get(`/channels/${this.$route.params.id}/subscriptions`)
+              .then(res => this.subscription = res.data);
+          });
+        }
+
+        this.fetchVideos().then(() => {
+          if(this.pagination) {
+            this.scrollHandler = scrolls.nearBottom(this.fetchVideos);
+            this.scrollHandler.enable();
+          }
+        });
+      });
     },
 
     async fetchVideos() {
@@ -99,6 +113,12 @@ export default {
   setup() {
     return {
       picture
+    }
+  },
+
+  watch: {
+    "$route.params.id": function() {
+      this.loadData();
     }
   }
 }
