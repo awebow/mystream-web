@@ -81,7 +81,7 @@ export default {
         this.videos = this.videos.concat(videos);
       }
 
-      if(this.pagination == null && this.scrollHandler)
+      if(this.pagination && this.scrollHandler)
         this.scrollHandler.disable();
     }
   },

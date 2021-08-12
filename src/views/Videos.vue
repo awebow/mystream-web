@@ -53,7 +53,7 @@ export default {
 
         this.videos = this.videos.concat(videos);
 
-        if(this.pagination == null)
+        if(this.pagination)
           this.scrollHandler.disable();
       } catch(e) {
         console.log(e);

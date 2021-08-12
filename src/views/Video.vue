@@ -240,7 +240,7 @@ export default {
         this.comments = this.comments.concat(res.data.data);
         this.pagination = res.data.pagination;
 
-        if(this.pagination == null && this.scrollHandler)
+        if(this.pagination && this.scrollHandler)
           this.scrollHandler.disable();
       }
       catch(e) { }
