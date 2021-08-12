@@ -114,10 +114,12 @@ export default {
         for(let rep of adapt.Representation_asArray) {
           if((adapt.mimeType != null && adapt.mimeType.split("/")[0] == "video")
             || (rep.mimeType != null && rep.mimeType.split("/")[0] == "video")) {
+
+            var sp = rep.frameRate.toString().split("/");
             this.qualities.push({
               width: rep.width,
               height: rep.height,
-              frameRate: rep.frameRate,
+              frameRate: sp.length == 2 ? parseInt(sp[0]) / parseInt(sp[1]) : rep.frameRate,
               bitrate: rep.bandwidth
             })
           }
