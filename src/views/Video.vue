@@ -45,9 +45,8 @@
 
           <footer>
             <div class="comment-form">
-              <div role="textbox" :contenteditable="$root.me != nul"
-                :aria-label="$root.me ? '댓글 입력' : '댓글을 입력하려면 로그인해주세요.'"
-                @keydown="commentKey"></div>
+              <textarea :disabled="$root.me == null" v-model="postingComment" rows="1"
+                :placeholder="$root.me ? '댓글 입력' : '댓글을 입력하려면 로그인해주세요.'"></textarea>
               <button type="button" @click="postComment" v-if="$root.me">등록</button>
             </div>
 
@@ -96,6 +95,7 @@ import picture from '../utils/picture';
 import Cookies from 'js-cookie';
 import nums from '../utils/nums';
 import scrolls from '../utils/scrolls';
+import autosize from "autosize";
 
 export default {
 
@@ -113,7 +113,8 @@ export default {
       dislikes: 0
     },
     updatingExp: false,
-    deletingComment: null
+    deletingComment: null,
+    postingComment: ""
   }),
 
   components: { Player, Modal },
@@ -157,6 +158,7 @@ export default {
         });
 
         this.video = video;
+        this.$nextTick(() => autosize(this.$el.querySelector("textarea")));
       });
     });
 
@@ -170,6 +172,10 @@ export default {
         this.scrollHandler.enable();
       }
     });
+  },
+
+  beforeUnmount() {
+    autosize.destroy(this.$el.querySelector("textarea"));
   },
 
   unmounted() {
@@ -192,14 +198,6 @@ export default {
     },
 
     linguisticTime: date => date == null ? '게시 안됨' : time.linguistic(date),
-
-    commentKey(e) {
-      setTimeout(() => {
-        var children = e.target.childNodes;
-        if(children.length == 1 && children[0].textContent == "")
-          e.target.innerHTML = "";
-      }, 0);
-    },
 
     async getWriter(c) {
       c.writer = (await api.get(`/users/${c.writer_id}`)).data;
@@ -247,24 +245,16 @@ export default {
     },
 
     postComment() {
-      var textBox = this.$el.querySelector(".comment-form [role='textbox']");
-      var content = "";
-      for(let i = 0; i < textBox.childNodes.length; i++) {
-        if(i > 0)
-          content += "\n";
-
-        content += textBox.childNodes[i].textContent;
-      }
-
       api.post(`/comments`, {
         video_id: this.$route.params.id,
-        content: content
+        content: this.postingComment
       }).then(async res => {
         var comment = res.data;
         await this.getWriter(comment);
 
         this.comments.unshift(comment);
-        textBox.innerHTML = "";
+        this.postingComment = "";
+        this.$nextTick(() => autosize.update(this.$el.querySelector("textarea")));
       });
     },
 
@@ -428,25 +418,21 @@ export default {
       display: flex;
       align-items: flex-end;
 
-      div[role="textbox"] {
-        width: 100%;
-        display: inline-block;
+      textarea {
         box-sizing: border-box;
         font-size: 14px;
         line-height: 22px;
         padding: 6px 12px;
         outline: none;
         flex: 1;
+        border: none;
+        background: none;
+        outline: none;
+        min-height: 36px;
+        resize: none;
         //line-break: auto;
         word-wrap: break-word;
         overflow-wrap: break-word;
-
-        &:empty::before {
-          pointer-events: none;
-          content: attr(aria-label);
-          display: block;
-          color: $text-light-grey;
-        }
       }
 
       button {

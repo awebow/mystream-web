@@ -6,15 +6,15 @@
       <input type="file" @change="fileSelected" />
     </button>
     <input type="text" placeholder="채널명" v-model="form.name" maxlength="100" />
-    <TextBox class="textfield" placeholder="채널 설명" v-model="form.description" />
+    <textarea class="textfield" placeholder="채널 설명" v-model="form.description"></textarea>
     <button type="button" class="blue-btn" :disabled="form.name.length == 0" @click="createChannel">생성</button>
   </form>
 </template>
 
 <script>
-import TextBox from "@/components/TextBox";
 import default_pic_ch from "@/assets/default_pic_ch.svg";
 import api from '../utils/api';
+import autosize from "autosize";
 
 export default {
 
@@ -26,8 +26,12 @@ export default {
     uploadPicture: null
   }),
 
-  components: {
-    TextBox
+  mounted() {
+    autosize(this.$el.querySelector("textarea"));
+  },
+
+  beforeUnmount() {
+    autosize.destroy(this.$el.querySelector("textarea"));
   },
 
   methods: {

@@ -1,7 +1,7 @@
 <template>
   <form class="upload-form mystream-form">
       <input type="text" placeholder="제목" v-model="title" maxlength="100" />
-      <TextBox class="textfield" placeholder="설명" v-model="description"></TextBox>
+      <textarea class="textfield" placeholder="설명" v-model="description"></textarea>
       <div class="video-file">
         <div class="file-name field" :class="{ 'no-file': file == null }">{{ fileLabel() }}</div>
         <button type="button" class="gray-btn"
@@ -24,11 +24,9 @@
 <script>
 import api from '../utils/api'
 import * as tus from "tus-js-client";
-import TextBox from '../components/TextBox.vue';
+import autosize from "autosize";
 
 export default {
-
-  components: { TextBox },
 
   data: () => ({
     title: "",
@@ -37,6 +35,14 @@ export default {
     uploading: false,
     progress: 0
   }),
+
+  mounted() {
+    autosize(this.$el.querySelector("textarea"));
+  },
+
+  beforeUnmount() {
+    autosize.destroy(this.$el.querySelector("textarea"));
+  },
 
   methods: {
     async uploadVideo() {

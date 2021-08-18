@@ -29,6 +29,15 @@
         }
     }
 
+    textarea.textfield {
+        width: 100%;
+        min-height: 36px;
+        line-height: 20px;
+        padding-top: 7px;
+        padding-bottom: 7px;
+        resize: none;
+    }
+
     input, .textfield, .field {
         border: 1px solid $line-grey;
         font-size: 14px;
