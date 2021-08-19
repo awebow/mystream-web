@@ -2,7 +2,7 @@
   <div class="modal-bg" :class="{ closing }">
     <div class="modal">
       <h1>{{ title }}</h1>
-      <div v-html="content" v-if="content" class="content"></div>
+      <div class="content"><slot></slot></div>
       <div class="buttons">
         <button type="button" v-for="b in buttons"
           @click="handleClick(b)">{{ b.label }}</button>

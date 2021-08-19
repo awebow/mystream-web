@@ -73,13 +73,14 @@
     <aside class="recommend-videos"></aside>
     <Modal
       title="댓글 삭제"
-      content="정말로 댓글을 삭제하시겠습니까?"
       :buttons="[
         {label: '삭제', onClick: deleteComment, closeAfter: true},
         {label: '취소', closeAfter: true}
       ]"
       :onClose="() => deletingComment = null"
-      v-if="deletingComment != null" />
+      v-if="deletingComment != null">정말로 댓글을 삭제하시겠습니까?</Modal>
+    
+
   </div>
 </template>
 
