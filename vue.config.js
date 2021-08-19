@@ -10,5 +10,17 @@ module.exports = {
             }
             return options
         })
+    },
+    pages: {
+        index: {
+            entry: "src/main.js",
+            template: "public/index.html",
+            filename: "index.html"
+        },
+        embedded: {
+            entry: "src/embedded.js",
+            template: "public/index.html",
+            filename: "embedded.html"
+        }
     }
 };

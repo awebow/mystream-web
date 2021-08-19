@@ -35,6 +35,7 @@ export default {
   props: ['src', 'captions'],
 
   mounted() {
+    this.player.on("canPlay", this.setObjectFit);
     this.player.initialize(this.$el.querySelector(".video-player"), this.$props.src, false);
   },
 
@@ -44,7 +45,16 @@ export default {
         document.exitFullscreen();
       else
         this.$el.requestFullscreen();
-      }
+    },
+
+    setObjectFit() {
+      var info = this.player.getBitrateInfoListFor("video")[0];
+      var el = this.$el.querySelector(".video-player");
+      if(Math.abs(el.clientHeight - info.height * el.clientWidth / info.width) <= 1)
+        el.style.objectFit = "fill";
+      else
+        el.style.objectFit = null;
+    }
   }
 
 }
@@ -56,6 +66,7 @@ export default {
   .video-wrapper {
     position: relative;
     display: flex;
+    background-color: black;
   }
 
   .video-player {

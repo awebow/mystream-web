@@ -24,6 +24,10 @@
               </template>
             </div>
             <div class="icons">
+              <button type="button" class="share" @click="() => shareVisibility = true">
+                <ion-icon name="share"></ion-icon>
+                <div class="label">공유</div>
+              </button>
               <button type="button" class="like"
                 :class="{'active': expression.my_expression == 'LIKE'}"
                 @click="() => expression.my_expression == 'LIKE' ? deleteExpression() : setExpression('LIKE')">
@@ -80,7 +84,29 @@
       :onClose="() => deletingComment = null"
       v-if="deletingComment != null">정말로 댓글을 삭제하시겠습니까?</Modal>
     
+    <Modal
+      class="share-modal"
+      title="동영상 공유"
+      :buttons="[{label: '닫기', closeAfter: true}]"
+      :onClose="() => shareVisibility = false"
+      v-if="video != null && shareVisibility">
+      <h2>링크 공유</h2>
+      <div class="copiable">
+        {{ site.pathToURL(`/videos/${video.id}`) }}
+      </div>
+      <div class="copy">
+        <a href="javascript:void(0)" v-if="!linkCopied" @click="copyLink">복사</a>
+        <template v-else>복사되었습니다!</template>
+      </div>
 
+      <h2>동영상 삽입</h2>
+      <div v-html="embedCode()"></div>
+      <div class="copiable">{{ embedCode() }}</div>
+      <div class="copy">
+        <a href="javascript:void(0)" v-if="!embedCopied" @click="copyEmbed">복사</a>
+        <template v-else>복사되었습니다!</template>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -97,6 +123,7 @@ import Cookies from 'js-cookie';
 import nums from '../utils/nums';
 import scrolls from '../utils/scrolls';
 import autosize from "autosize";
+import site from "../utils/site";
 
 export default {
 
@@ -115,7 +142,10 @@ export default {
     },
     updatingExp: false,
     deletingComment: null,
-    postingComment: ""
+    postingComment: "",
+    shareVisibility: false,
+    linkCopied: false,
+    embedCopied: false
   }),
 
   components: { Player, Modal },
@@ -124,7 +154,8 @@ export default {
     return {
       picture,
       storage,
-      nums
+      nums,
+      site
     }
   },
 
@@ -278,6 +309,26 @@ export default {
     unsubscribe() {
       api.delete(`/channels/${this.video.channel.id}/subscriptions`)
         .then(res => this.subscription = res.data);
+    },
+
+    copyLink() {
+      navigator.clipboard.writeText(site.pathToURL(`/videos/${this.video.id}`));
+      this.linkCopied = true;
+      setTimeout(() => this.linkCopied = false, 2000)
+    },
+
+    copyEmbed() {
+      navigator.clipboard.writeText(this.embedCode());
+      this.embedCopied = true;
+      setTimeout(() => this.embedCopied = false, 2000)
+    },
+
+    embedCode() {
+      var width = 640;
+      var height = this.video.height * width / this.video.width;
+      return `<iframe width="${width}" height="${height}" ` +
+          `src="${site.pathToURL(`/embedded/${this.video.id}`)}" ` +
+          `frameborder="0" allowfullscreen></iframe>`;
     }
   }
 }
@@ -381,6 +432,10 @@ export default {
             &.active {
               color: $theme-blue-emp;
             }
+          }
+
+          .share ion-icon {
+            margin-bottom: 5px;
           }
 
           .like {
@@ -545,5 +600,39 @@ export default {
 
   .recommend-videos {
     flex: 0 0 300px;
+  }
+
+  .share-modal {
+    h2 {
+      font-size: 16px;
+      margin: 8px 0 0 0;
+    }
+
+    .copy {
+      font-size: 14px;
+      margin-left: 8px;
+      text-align: right;
+      color: $text-dark-grey;
+
+      a {
+        color: $theme-blue;
+        text-decoration: none;
+
+        &:hover {
+          color: $theme-blue-emp;
+        }
+      }
+    }
+
+    .copiable {
+      box-sizing: border-box;
+      width: 640px;
+      padding: 4px;
+      border: 1px solid $line-grey;
+      border-radius: 8px;
+      background-color: #f0f0f0;
+      font-size: 14px;
+      clear: both;
+    }
   }
 </style>

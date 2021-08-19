@@ -95,6 +95,7 @@ export default {
         align-items: flex-end;
         flex: 1;
         gap: 4px;
+        padding-top: 16px;
 
         button {
           min-width: 72px;
