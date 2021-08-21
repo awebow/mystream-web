@@ -63,7 +63,7 @@
                   <p v-for="s in sentences(c.content)">{{ s }}</p>
                 </div>
 
-                <button type="button" class="delete-comment" v-if="c.writer.id == $root.me.id"
+                <button type="button" class="delete-comment" v-if="$root.me && c.writer.id == $root.me.id"
                   @click="() => deletingComment = c">
                   <ion-icon name="trash-outline"></ion-icon>
                 </button>
