@@ -1,12 +1,15 @@
 <template>
   <div
     class="video-wrapper"
+    tabindex="0"
     @mouseenter="() => this.hoverControls = true"
     @mousemove="() => this.lastMove = new Date().getMilliseconds()"
-    @mouseleave="() => this.hoverControls = false">
+    @mouseleave="() => this.hoverControls = false"
+    @click="$refs.control.onVideoClick"
+    @keydown="$refs.control.onKeyDown">
 
     <video class="video-player"></video>
-    <PlayerControl
+    <PlayerControl ref="control"
       :player="player"
       :toggleFullscreen="toggleFullscreen"
       :hover="hoverControls"
@@ -67,6 +70,8 @@ export default {
     position: relative;
     display: flex;
     background-color: black;
+    outline: none;
+    user-select: none;
   }
 
   .video-player {

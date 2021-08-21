@@ -2,7 +2,8 @@
   <div
     class="player-control"
     ref="control"
-    :class="{ hidden: playing && !visibility, fadeOut: playing && fadeOut }">
+    :class="{ hidden: playing && !visibility, fadeOut: playing && fadeOut }"
+    v-if="ready">
 
     <PlayerMenu class="video-settings" v-if="menu == 'settings'" :items="settingItems" />
     <PlayerMenu class="quality-settings" v-if="menu == 'quality'" :items="qualityItems()" />
@@ -225,6 +226,29 @@ export default {
         this.$props.player.setQualityFor("video", quality, true);
       
       this.quality = quality;
+    },
+
+    onVideoClick(e) {
+      console.log(e.target);
+      var ctrlBarRect = this.$el.querySelector(".control-bar").getBoundingClientRect();
+      if((e.target != this.$el && e.target != this.$el.parentElement) || e.clientY >= ctrlBarRect.top)
+        return;
+
+      if(this.playing)
+        this.player.pause();
+      else
+        this.player.play();
+    },
+
+    onKeyDown(e) {
+      if(e.key != " ")
+        return;
+
+      e.preventDefault();
+      if(this.playing)
+        this.player.pause();
+      else
+        this.player.play();
     },
 
     show() {
