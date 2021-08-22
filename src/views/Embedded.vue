@@ -1,5 +1,5 @@
 <template>
-  <Player class="embedded" :src="videoUrl()" />
+  <Player class="embedded" :src="videoUrl()" :embedded="true" />
 </template>
 
 <script>

@@ -35,7 +35,13 @@ export default {
     lastMove: new Date().getTime()
   }),
 
-  props: ['src', 'captions'],
+  props: {
+    src: String,
+    embedded: {
+      type: Boolean,
+      default: false
+    }
+  },
 
   mounted() {
     this.player.on("canPlay", this.setObjectFit);
@@ -51,12 +57,16 @@ export default {
     },
 
     setObjectFit() {
-      var info = this.player.getBitrateInfoListFor("video")[0];
+      var infoList = this.player.getBitrateInfoListFor("video");
+      var info = infoList[infoList.length - 1 ];
       var el = this.$el.querySelector(".video-player");
-      if(Math.abs(el.clientHeight - info.height * el.clientWidth / info.width) <= 1)
-        el.style.objectFit = "fill";
-      else
-        el.style.objectFit = null;
+      
+      if(this.$props.embedded) {
+        if(Math.abs(el.clientHeight - info.height * el.clientWidth / info.width) <= 1)
+          el.style.objectFit = "fill";
+        else
+          el.style.objectFit = null;
+      }
     }
   }
 
