@@ -49,11 +49,18 @@ export default {
   },
 
   methods: {
-    toggleFullscreen() {
-      if(document.fullscreenElement == this.$el)
-        document.exitFullscreen();
-      else
-        this.$el.requestFullscreen();
+    async toggleFullscreen() {
+      try {
+        if(document.fullscreenElement == this.$el)
+          await document.exitFullscreen();
+        else
+          await this.$el.requestFullscreen();
+        
+        this.setObjectFit();
+      }
+      catch(err) {
+        throw err;
+      }
     },
 
     setObjectFit() {
