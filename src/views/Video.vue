@@ -325,7 +325,7 @@ export default {
 
     embedCode() {
       var width = 640;
-      var height = this.video.height * width / this.video.width;
+      var height = Math.floor(this.video.height * width / this.video.width);
       return `<iframe width="${width}" height="${height}" ` +
           `src="${site.pathToURL(`/embedded/${this.video.id}`)}" ` +
           `frameborder="0" allowfullscreen></iframe>`;
