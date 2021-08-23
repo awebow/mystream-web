@@ -33,8 +33,10 @@ export default {
 
   mounted() {
     this.search(this.$route.params.query).then(() => {
-      this.scrollHandler = scrolls.nearBottom(this.search);
-      this.scrollHandler.enable();
+      if(this.pagination) {
+        this.scrollHandler = scrolls.nearBottom(this.search);
+        this.scrollHandler.enable();
+      }
     });
   },
 
