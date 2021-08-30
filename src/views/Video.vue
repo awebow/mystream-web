@@ -342,7 +342,7 @@ export default {
     flex: 1;
 
     main {
-      flex: 1;
+      flex: 0 0 calc(100vw - 512px);
     }
   }
 
@@ -599,7 +599,7 @@ export default {
   }
 
   .recommend-videos {
-    flex: 0 0 300px;
+    flex: 1;
   }
 
   .share-modal {
