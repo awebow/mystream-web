@@ -20,6 +20,7 @@
 <script>
 import PlayerControl from './PlayerControl';
 import dashjs from 'dashjs';
+import { ResizeObserver as Polyfill } from '@juggle/resize-observer';
 
 export default {
 
@@ -28,12 +29,14 @@ export default {
   },
 
   data: () => ({
-    menu: null,
-    qualities: [],
-    player: dashjs.MediaPlayer().create(),
-    hoverControls: false,
-    lastMove: new Date().getTime()
-  }),
+      menu: null,
+      qualities: [],
+      player: dashjs.MediaPlayer().create(),
+      hoverControls: false,
+      lastMove: new Date().getTime(),
+      /** @type {ResizeObserver} */
+      resizeObserver: null
+    }),
 
   props: {
     src: String,
@@ -44,23 +47,26 @@ export default {
   },
 
   mounted() {
+    let playerEl = this.$el.querySelector(".video-player");
+
     this.player.on("canPlay", this.setObjectFit);
-    this.player.initialize(this.$el.querySelector(".video-player"), this.$props.src, false);
+    this.player.initialize(playerEl, this.$props.src, false);
+
+    const ResizeObserver = window.ResizeObserver || Polyfill;
+    this.resizeObserver = new ResizeObserver(this.setObjectFit);
+    this.resizeObserver.observe(playerEl);
+  },
+
+  unmounted() {
+    this.resizeObserver.disconnect();
   },
 
   methods: {
-    async toggleFullscreen() {
-      try {
-        if(document.fullscreenElement == this.$el)
-          await document.exitFullscreen();
-        else
-          await this.$el.requestFullscreen();
-        
-        this.setObjectFit();
-      }
-      catch(err) {
-        throw err;
-      }
+    toggleFullscreen() {
+      if(document.fullscreenElement == this.$el)
+        document.exitFullscreen();
+      else
+        this.$el.requestFullscreen();
     },
 
     setObjectFit() {
