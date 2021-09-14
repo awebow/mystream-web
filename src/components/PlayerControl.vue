@@ -229,7 +229,6 @@ export default {
     },
 
     onVideoClick(e) {
-      console.log(e.target);
       var ctrlBarRect = this.$el.querySelector(".control-bar").getBoundingClientRect();
       if((e.target != this.$el && e.target != this.$el.parentElement) || e.clientY >= ctrlBarRect.top)
         return;

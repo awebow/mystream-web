@@ -50,6 +50,13 @@ export default {
     let playerEl = this.$el.querySelector(".video-player");
 
     this.player.on("canPlay", this.setObjectFit);
+    this.player.updateSettings({
+      streaming: {
+        buffer: {
+          stableBufferTime: 15
+        }
+      }
+    });
     this.player.initialize(playerEl, this.$props.src, false);
 
     const ResizeObserver = window.ResizeObserver || Polyfill;
@@ -58,6 +65,7 @@ export default {
   },
 
   unmounted() {
+    this.player.reset();
     this.resizeObserver.disconnect();
   },
 
