@@ -8,7 +8,7 @@
             <span>동영상 인코딩 중입니다.</span>
           </div>
         </div>
-        <Player :src="videoUrl()" v-else />
+        <Player :src="videoUrl()" class="video-component" v-else />
         <div class="bottom-content">
           <header>
             <div class="meta">
@@ -325,7 +325,10 @@ export default {
 
     embedCode() {
       var width = 640;
-      var height = Math.floor(this.video.height * width / this.video.width);
+      var height = this.video.width >= this.video.height
+        ? Math.floor(this.video.height * width / this.video.width)
+        : 360;
+      
       return `<iframe width="${width}" height="${height}" ` +
           `src="${site.pathToURL(`/embedded/${this.video.id}`)}" ` +
           `frameborder="0" allowfullscreen></iframe>`;
@@ -336,6 +339,7 @@ export default {
 
 <style lang="scss">
   @import "../stylesheets/colors.scss";
+  @import "../stylesheets/dimensions.scss";
 
   .video-page-wrapper {
     display: flex;
@@ -349,6 +353,10 @@ export default {
   .video-article {
     $picture-size: 55px;
     $header-gap: 12px;
+
+    .video-component:not(:fullscreen) {
+      max-height: calc(100vh - #{$top-bar-height});
+    }
 
     .bottom-content {
       padding: 0 16px;
